@@ -17,6 +17,8 @@
       <h1>Monster Slayer</h1>
     </header>
     <div id="game">
+
+      <!-- Health Bar -->
       <section id="monster" class="container">
         <h2>Monster Health</h2>
         <div class="healthbar">
@@ -29,16 +31,46 @@
           <div class="healthbar__value" :style="playerBarStyle"></div>
         </div>
       </section>
-      <section id="controls">
+      <!-- Health Bar -->
+
+      <!-- Game Condition -->
+      <section class="container" v-if="winner !== null">
+        <h2>Game Over!</h2>
+        <h3 v-show="winner === 'monster'">You Lost!</h3>
+        <h3 v-show="winner === 'player'">You Won!</h3>
+        <h3 v-show="winner === 'draw'">It's Draw!</h3>
+        <button @click="startGame()">Start New Game?</button>
+      </section>
+      <!-- Game Condition -->
+
+      <!-- Buttons -->
+      <section id="controls" v-else>
         <button @click="attackMonster()">ATTACK</button>
         <button :disabled="mayUseSpecialAttack" @click="specialAttackMonster()">SPECIAL ATTACK</button>
         <button @click="healPlayer()">HEAL</button>
-        <button>SURRENDER</button>
+        <button @click="surrender()">SURRENDER</button>
       </section>
+      <!-- Buttons -->
+
+      <!-- Battle Log -->
       <section id="log" class="container">
         <h2>Battle Log</h2>
-        <ul></ul>
+        <ul>
+          <li v-for="log in attackLog">
+            <!-- {{ log.attackBy }} - {{ log.attackType }} - {{ log.attackValue }} -->
+            <span :class="{'log--player': log.attackBy === 'player', 'log--monster': log.attackBy === 'monster'}"> {{ (log.attackBy === "player") ? "Player" : "Monster"}}</span>
+            <span v-if="log.attackType === 'heal'"> 
+              heals himself for <span class="log--heal">{{ log.attackValue }}</span>.
+            </span>
+            <span v-else>
+              attacks and deals <span class="log-damage">{{ log.attackValue }}</span>.
+            </span>
+          </li>
+        </ul>
       </section>
+      <!-- Battle Log -->
+      <!-- addAttackLogMessage -->
+      <!-- attackLog -->
     </div>
   </body>
 </html>
